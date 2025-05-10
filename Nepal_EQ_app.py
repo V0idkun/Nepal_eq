@@ -109,14 +109,24 @@ with tab1:
             else:
                 st.success('Great the damage was below 3')
             
-            background = X_train.sample(3, random_state=30)
-            explainer = shap.Explainer(model.predict, background)
-            shap_values = explainer(input_df)
+            explainer = shap.TreeExplainer(model)
+            shap_values = explainer.shap_values(input_df)
 
+            shap.initjs()
             st.subheader("SHAP Explanation")
+
+            # Use SHAP waterfall plot for class 1 (if binary classification)
             fig, ax = plt.subplots()
-            shap.plots.waterfall(shap_values[0], max_display=10, show=False)
+            shap.plots.waterfall(shap.Explanation(
+                values=shap_values[1][0],
+                base_values=explainer.expected_value[1],
+                data=input_df.iloc[0],
+                feature_names=input_df.columns
+            ), max_display=10, show=False)
+
             st.pyplot(fig)
+            plt.clf()
+
 
         
         
@@ -174,14 +184,21 @@ with tab2:
           else:
             st.error('The damage was disaterous') 
 
-          background = X_train.sample(3, random_state=30)
-          explainer = shap.Explainer(model1.predict, background)
-          shap_values = explainer(input_df)
+          explainer = shap.TreeExplainer(model1)
+          shap_values = explainer.shap_values(input_df)
 
+          shap.initjs()
           st.subheader("SHAP Explanation")
+
+          # Use SHAP waterfall plot for class 1 (if binary classification)
           fig, ax = plt.subplots()
-          shap.plots.waterfall(shap_values[0], max_display=10, show=False)
-          st.pyplot(fig) 
+          shap.plots.waterfall(shap.Explanation(values=shap_values[1][0],base_values=explainer.expected_value[1],data=input_df.iloc[0],feature_names=input_df.columns
+          ), max_display=10, show=False)
+
+          st.pyplot(fig)
+          plt.clf()
+
+
 
 
         
