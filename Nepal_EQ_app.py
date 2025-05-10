@@ -95,8 +95,8 @@ with tab1:
             else:
                 st.success('Great the damage was below 3')
             
-            explainer = shap.Explainer(model.predict, input_df)
-            shap_values = explainer(input_df)
+            explainer = shap.TreeExplainer(model)
+            shap_values = explainer.shap_values(input_df)
 
             st.subheader("SHAP Explanation")
             fig, ax = plt.subplots()
@@ -142,7 +142,7 @@ with tab2:
         record = input_df.copy()
         record["prediction"] = prediction
 
-        file_exists = os.path.isfile("user_logs.csv")
+        file_exists = os.path.isfile("user_logs1.csv")
         record.to_csv("user_logs.csv", mode="a", index=False, header=not file_exists)
         return prediction
 
@@ -159,8 +159,8 @@ with tab2:
           else:
             st.error('The damage was disaterous') 
 
-          explainer = shap.Explainer(model.predict, input_df)
-          shap_values = explainer(input_df)
+          explainer = shap.TreeExplainer(model)
+          shap_values = explainer.shap_values(input_df)
 
           st.subheader("SHAP Explanation")
           fig, ax = plt.subplots()
