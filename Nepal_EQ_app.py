@@ -78,6 +78,20 @@ with tab1:
             'superstructure':superstructure
         }
         input_df = pd.DataFrame([input_data])
+        X_train = pd.DataFrame({
+        'age_building':[20,50,100,80],
+        'foundation_type' : ['Other', 'Mud mortar-Stone/Brick', 'Cement-Stone/Brick','Cement-Stone/Brick'],
+        'ground_floor_type': ['Mud', 'Brick/Stone', 'RC', 'Timber'],
+        'height_ft_pre_eq' : [10,6,20,40],
+        'land_surface_condition': ['Flat', 'Moderate slope', 'Steep slope','Steep slope'],
+        'other_floor_type': ['Not applicable', 'TImber/Bamboo-Mud', 'Timber-Planck','RCC/RB/RBC'],
+        'plan_configuration':['Rectangular', 'L-shape', 'Square', 'T-shape'],
+        'plinth_area_sq_ft':[1000,450,2000,4000],
+        'position':['Not attached', 'Attached-1 side', 'Attached-2 side','NOt attached'],
+        'roof_type':['Bamboo/Timber-Light roof', 'Bamboo/Timber-Heavy roof','RCC/RB/RBC','Bamboo/Timber-Light roof'],
+        'superstructure':['mud_mortar_stone', 'bamboo', 'adobe_mud', 'stone_flag']
+        
+        })
         def predict_eq(input_data):
             input_df = pd.DataFrame([input_data])
             prediction = model.predict(input_df)
@@ -95,8 +109,9 @@ with tab1:
             else:
                 st.success('Great the damage was below 3')
             
-            explainer = shap.TreeExplainer(model)
-            shap_values = explainer.shap_values(input_df)
+            background = X_train.sample(3, random_state=30)
+            explainer = shap.Explainer(model.predict, background)
+            shap_values = explainer(input_df)
 
             st.subheader("SHAP Explanation")
             fig, ax = plt.subplots()
@@ -159,8 +174,9 @@ with tab2:
           else:
             st.error('The damage was disaterous') 
 
-          explainer = shap.TreeExplainer(model)
-          shap_values = explainer.shap_values(input_df)
+          background = X_train.sample(3, random_state=30)
+          explainer = shap.Explainer(model1.predict, background)
+          shap_values = explainer(input_df)
 
           st.subheader("SHAP Explanation")
           fig, ax = plt.subplots()
