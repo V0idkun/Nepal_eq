@@ -120,7 +120,7 @@ with tab1:
             # Use SHAP waterfall plot for class 1 (if binary classification)
             fig, ax = plt.subplots()
             shap.plots.waterfall(shap.Explanation(
-                values=shap_values[1][0],
+                values=shap_values[1],
                 base_values=explainer.expected_value[1],
                 data=input_df.iloc[0],
                 feature_names=input_df.columns
