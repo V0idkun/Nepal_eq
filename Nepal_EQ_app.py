@@ -8,8 +8,8 @@ from PIL import Image
 import shap
 import os
 
-model = joblib.load('C:\\Users\\User\\Machine Learning\\Nepal\\Nepal_12_model(severe_damage).pkl')
-model1 = joblib.load('C:\\Users\\User\\Machine Learning\\Nepal\\Nepal_28_model(Damage_Grade).pkl')
+model = joblib.load('Nepal_12_model(severe_damage).pkl')
+model1 = joblib.load('Nepal_28_model(Damage_Grade).pkl')
 st.title('NEPAL EARTHQUAKE')
 tab,tab1,tab2 = st.tabs(['Data Analysis','Nepal District 12(Severe Damage)','Nepal District 28(Damage Grade)'])
 with tab:
