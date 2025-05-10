@@ -109,8 +109,10 @@ with tab1:
             else:
                 st.success('Great the damage was below 3')
             
-            explainer = shap.TreeExplainer(model)
-            shap_values = explainer.shap_values(input_df)
+            tree_model = model.named_steps['dt']  
+            encoded_input = model.named_steps["oh"].transform(input_df)
+            explainer = shap.TreeExplainer(tree_model)
+            shap_values = explainer.shap_values(encoded_input)
 
             shap.initjs()
             st.subheader("SHAP Explanation")
@@ -184,8 +186,10 @@ with tab2:
           else:
             st.error('The damage was disaterous') 
 
-          explainer = shap.TreeExplainer(model1)
-          shap_values = explainer.shap_values(input_df)
+          tree_model = model1.named_steps['dt']  
+          encoded_input = model1.named_steps["oh"].transform(input_df)
+          explainer = shap.TreeExplainer(tree_model)
+          shap_values = explainer.shap_values(encoded_input)
 
           shap.initjs()
           st.subheader("SHAP Explanation")
