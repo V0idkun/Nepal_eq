@@ -119,15 +119,8 @@ with tab1:
 
             # Use SHAP waterfall plot for class 1 (if binary classification)
             fig, ax = plt.subplots()
-            shap.plots.waterfall(shap.Explanation(
-                values=shap_values,
-                base_values=explainer.expected_value[1],
-                data=input_df.iloc[0],
-                feature_names=input_df.columns
-            ), max_display=10, show=False)
-
+            shap.plots.waterfall(shap_values[0], max_display=10, show=False)
             st.pyplot(fig)
-            plt.clf()
 
 
         
