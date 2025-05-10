@@ -5,6 +5,8 @@ import plotly.express as px
 import joblib
 import seaborn as sns
 from PIL import Image
+import shap
+import os
 
 model = joblib.load('C:\\Users\\User\\Machine Learning\\Nepal\\Nepal_12_model(severe_damage).pkl')
 model1 = joblib.load('C:\\Users\\User\\Machine Learning\\Nepal\\Nepal_28_model(Damage_Grade).pkl')
@@ -75,10 +77,15 @@ with tab1:
             'roof_type':roof_type,
             'superstructure':superstructure
         }
-
+        input_df = pd.DataFrame([input_data])
         def predict_eq(input_data):
             input_df = pd.DataFrame([input_data])
             prediction = model.predict(input_df)
+            record = input_df.copy()
+            record["prediction"] = prediction
+
+            file_exists = os.path.isfile("user_logs.csv")
+            record.to_csv("user_logs.csv", mode="a", index=False, header=not file_exists)
             return prediction
         
         if st.button('Predict'):
@@ -87,6 +94,17 @@ with tab1:
                 st.error('The damage was above 3')
             else:
                 st.success('Great the damage was below 3')
+            
+            explainer = shap.Explainer(model.predict, input_df)
+            shap_values = explainer(input_df)
+
+            st.subheader("SHAP Explanation")
+            fig, ax = plt.subplots()
+            shap.plots.waterfall(shap_values[0], max_display=10, show=False)
+            st.pyplot(fig)
+
+        
+        
 with tab2:
     st.header('Nepal Disrict 28')
 
@@ -117,10 +135,15 @@ with tab2:
         'roof_type':roof_type,
         'superstructure':superstructure
     }
-
+    input_df = pd.DataFrame([input_data])
     def predict_eq(input_data):
         input_df = pd.DataFrame([input_data])
         prediction = model1.predict(input_df)
+        record = input_df.copy()
+        record["prediction"] = prediction
+
+        file_exists = os.path.isfile("user_logs.csv")
+        record.to_csv("user_logs.csv", mode="a", index=False, header=not file_exists)
         return prediction
 
     if st.button('predict'):
@@ -134,7 +157,15 @@ with tab2:
           elif prediction == 4:
               st.error('The damage was bad')
           else:
-            st.error('The damage was disaterous')  
+            st.error('The damage was disaterous') 
+
+          explainer = shap.Explainer(model.predict, input_df)
+          shap_values = explainer(input_df)
+
+          st.subheader("SHAP Explanation")
+          fig, ax = plt.subplots()
+          shap.plots.waterfall(shap_values[0], max_display=10, show=False)
+          st.pyplot(fig) 
 
 
         
